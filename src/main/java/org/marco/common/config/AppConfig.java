@@ -7,13 +7,26 @@ import org.marco.common.service.InventoryService;
 import org.marco.common.service.OrderService;
 import org.marco.common.service.impl.InventoryServiceImpl;
 import org.marco.common.service.impl.OrderServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @Configuration
+@Import(DataConfig.class)
 public class AppConfig {
+	
+	@Autowired
+	private CustomerRepository customerRepository;
+	
+	@Autowired
+	private InventoryItemRepository inventoryItemRepository;
+	
+	@Autowired
+	private SalesOrderRepository salesOrderRepository;
+	
 
 	@Bean
 	public OrderService orderService(InventoryService inventoryService, CustomerRepository customerRepository, SalesOrderRepository salesOrderRepository) {
@@ -24,23 +37,6 @@ public class AppConfig {
 	public InventoryService inventoryService(InventoryItemRepository inventoryItemRepository) {
 		return new InventoryServiceImpl(inventoryItemRepository);
 	}
-	
-	@Bean
-	public InventoryItemRepository inventoryItemRepository() {
-		return new InventoryItemRepository();
-	}
-	
-	@Bean
-	public CustomerRepository customerRepository() {
-		return new CustomerRepository();
-		
-	}
-	
-	@Bean
-	public SalesOrderRepository salesOrderRepository() {
-		return new SalesOrderRepository();
-	}
-	
 	
 	public static void main(String[] args) {
 		
