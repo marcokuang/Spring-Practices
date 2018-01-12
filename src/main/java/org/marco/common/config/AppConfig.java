@@ -14,30 +14,40 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
+// import spring configs from other files
 @Import(DataConfig.class)
-@PropertySource("classpath:/application.properties")
+// declare a property source
+@PropertySource("classpath:/application-${spring.profiles.active}.properties")
 public class AppConfig {
 	
-	@Value("${gretting.text}")
+	// look for a value in a property source
+	@Value("${greeting.text}")
 	private String greetingText;
+	
+	@Value("${greeting.preamble}")
+	private String greetingPreamble; 
 	
 	public class Worker{
 		private String text;
-		public Worker(String text) {
+		private String preamble;
+		
+		public Worker(String preamble, String text) {
 			this.text = text;
+			this.preamble = preamble;
 		}
 		
 		public void execute() {
-			System.out.println("Hello " + text);
+			System.out.println(preamble + "  "+ text);
 		}
 	}
 	
 	@Bean
 	public Worker worker() {
-		return new Worker(greetingText);
+		return new Worker(greetingPreamble, greetingText);
 	}
 	
 	@Autowired
