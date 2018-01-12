@@ -1,4 +1,5 @@
 package org.marco.common.config;
+/*package org.marco.common.config;
 
 import org.marco.common.data.repository.CustomerRepository;
 import org.marco.common.data.repository.InventoryItemRepository;
@@ -23,4 +24,4 @@ public class DataConfig {
 	public SalesOrderRepository salesOrderRepository() {
 		return new SalesOrderRepository();
 	}
-}
+}*/

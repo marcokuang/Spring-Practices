@@ -12,74 +12,52 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Scope;
 
 @Configuration
-// import spring configs from other files
-@Import(DataConfig.class)
-// declare a property source
-@PropertySource("classpath:/application-${spring.profiles.active}.properties")
+@PropertySource("classpath:/application.properties")
+@ComponentScan(basePackages = {"org.marco.common"})
 public class AppConfig {
-	
-	// look for a value in a property source
-	@Value("${greeting.text}")
-	private String greetingText;
-	
-	@Value("${greeting.preamble}")
-	private String greetingPreamble; 
-	
-	public class Worker{
-		private String text;
-		private String preamble;
-		
-		public Worker(String preamble, String text) {
-			this.text = text;
-			this.preamble = preamble;
-		}
-		
-		public void execute() {
-			System.out.println(preamble + "  "+ text);
-		}
-	}
-	
-	@Bean
-	public Worker worker() {
-		return new Worker(greetingPreamble, greetingText);
-	}
-	
-	@Autowired
-	private CustomerRepository customerRepository;
-	
-	@Autowired
-	private InventoryItemRepository inventoryItemRepository;
-	
-	@Autowired
-	private SalesOrderRepository salesOrderRepository;
-	
 
-	@Bean
-	public OrderService orderService(InventoryService inventoryService, CustomerRepository customerRepository, SalesOrderRepository salesOrderRepository) {
-		return new OrderServiceImpl(inventoryService, customerRepository, salesOrderRepository);
-	}
-	
-	@Bean
-	public InventoryService inventoryService(InventoryItemRepository inventoryItemRepository) {
-		return new InventoryServiceImpl(inventoryItemRepository);
-	}
-	
-	public static void main(String[] args) {
-		
-		ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-		OrderService orderService = context.getBean(OrderService.class);
-		
-		String output = (orderService == null ? "not ok" : "ok");
-		
-		Worker worker = context.getBean(Worker.class);
-		worker.execute();
-		
-		System.out.println(output);
-	}
+    @Value("${greeting.text}")
+    private String greetingText;
+
+    @Value("${greeting.preamble}")
+    private String greetingPreamble;
+
+
+    public class Worker{
+        private String preamble;
+        private String text;
+
+        public Worker(String preamble, String text){
+            this.preamble = preamble;
+            this.text = text;
+            System.out.println("New Instance");
+        }
+
+        public void execute(){
+            System.out.println(preamble + " " + text);
+        }
+
+    }
+    
+    @Bean
+    public Worker worker() {
+    	return new Worker(greetingPreamble, greetingText);
+    }
+
+
+    public static void main (String[] args){
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        Worker worker = context.getBean(Worker.class);
+        worker.execute();
+        
+        OrderService orderService = context.getBean(OrderServiceImpl.class);
+    }
 }

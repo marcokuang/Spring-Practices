@@ -6,14 +6,18 @@ import org.marco.common.domain.Customer;
 import org.marco.common.domain.Order;
 import org.marco.common.service.InventoryService;
 import org.marco.common.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+@Service
 public class OrderServiceImpl implements OrderService {
     private final InventoryService inventoryService;
     private final CustomerRepository customerRepository;
     private final SalesOrderRepository salesOrderRepository;
 
+    @Autowired
     public OrderServiceImpl(InventoryService inventoryService, CustomerRepository customerRepository, SalesOrderRepository salesOrderRepository) {
         this.inventoryService = inventoryService;
         this.customerRepository = customerRepository;
